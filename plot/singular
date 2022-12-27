@@ -1,0 +1,129 @@
+import matplotlib.pyplot as plt
+from matplotlib import rc
+import numpy as np
+
+rc('text', usetex=True)
+
+#for VDFD
+
+# fig = plt.figure(figsize=(6,4))# for 3 rows 2 columns
+fig = plt.figure(figsize=(6,4)) # for 2 rows 2 columns
+E = 2 # number of experiments
+N = E * 2#number of subplots
+x_lab = list(range(1,9)) 
+y = [
+    [65.99,65.05,65.14,65.15,64.43,64.85,64.99,64.77], 
+    [-2.35,-3.02,-2.81,-2.78,-3.12,-3.12,-3.21,-3.45],
+    [54.48,53,52.94,53.62,53.88,53.22,54.12,53.84], #std = 0.55
+    [-3.82,-4.22,-4.28,-3.77,-3.57,-4.57,-3.55,-3.95] #std = 0.36
+] #ACC, BWT corresponding method
+std = [0.45,0.33,0.55,0.36]
+tx = [0.4] * E 
+# ty = [0.68,0.35,0.01] # # for 3 rows
+ty = [0.52,0.01] # # for 2 rows
+title = ['(a) 25-split TinyImageNet', '(b) 10-split SubImageNet']
+y_lim = [[60,67],[50,56]]
+
+# one y axes
+for i in range(N):
+    ax = fig.add_subplot(2, 2, i+1)
+    # point with same marksize
+    # ax.plot(list(range(1,len(y[i])+1)), y[i], marker='*', markersize=5) 
+    #point with different marksize
+    ax.plot(list(range(1,len(y[i])+1)), y[i], color='lightgreen') #lightskyblue
+    for p in range(len(y[i])):
+        ax.scatter(p+1,y[i][p],s=5*(p+1),c='orange') #lightsalmon
+    plt.xticks(list(range(1,len(y[i])+1)),x_lab,fontsize=12)
+    plt.yticks(size = 12)
+    plt.xlabel(r'$r$',fontsize=12)
+    plt.title('std={}'.format(std[i]))
+    if y[i][0] < 0:
+        plt.ylabel('BWT(\%)',fontsize=12)
+        plt.ylim(-6,0)
+    else:
+        plt.ylabel('ACC(\%)',fontsize=12) 
+        # plt.ylim((max(y[i])//10+1)*10-10,(max(y[i])//10+1)*10)
+        plt.ylim(y_lim[i//2][0],y_lim[i//2][1])
+    if i % 2 == 0:
+        plt.figtext(tx[i//2], ty[i//2], title[i//2], fontsize=12)
+
+plt.tight_layout()
+# plt.subplots_adjust(top=0.85, bottom=0.3)
+# plt.subplots_adjust(bottom=0.12, hspace=1)# for 3 rows
+plt.subplots_adjust(bottom=0.15, hspace=1)# for 2 rows
+# fig.legend(bbox_to_anchor=(0.98,1),fontsize=12,ncol=3)
+plt.savefig('singular.pdf') #,bbox_inches='tight'
+plt.show()
+
+
+# fig = plt.figure(figsize=(6,6))
+# E = 3 # number of experiments
+# N = E * 2#number of subplots
+# # x_lab = [r'$r=1$', r'$r=2$', r'$r=3$', r'$r=4$', r'$r=5$', r'$r=6$', r'$r=7$', r'$r=8$'] #method name
+# x_lab = list(range(1,9))
+# y = [
+#     [83.13,82.21,82.12,81.58,81.66,81.51,81.67,81.47], #,81.52 ,-1.51 r1=node18
+#     [-2.27,-1.72,-1.35,-1.71,-1.48,-1.51,-1.34,-1.67],
+#     [64.41,63.78,63.86,64.22,64.09,64.02,63.59,63.69], #r1=619
+#     [-3.39,-3.39,-3.39,-2.69,-2.99,-2.59,-3.05,-3.33],
+#     [55.02,54.8,54.32,54.1,54.5,54.52,55.2,54.8],#r1=beijing
+#     [-4.91,-4.8,-5.04,-5.19,-4.42,-4.73,-4,-4.13]
+# ] #ACC, BWT corresponding method
+# std = [0.52,0.27,0.26,0.3,0.34,0.4]
+# tx = [0.4] * E 
+# ty = [0.68,0.35,0.01]
+# title = ['(a) 10-split CIFAR-100', '(b) 25-split TinyImageNet', '(c) 10-split SubImageNet']
+# y_lim = [[80,85],[60,65],[50,56]]
+
+# # one y axes
+# for i in range(N):
+#     ax = fig.add_subplot(3, 2, i+1)
+#     # point with same marksize
+#     # ax.plot(list(range(1,len(y[i])+1)), y[i], marker='*', markersize=5) 
+#     #point with different marksize
+#     ax.plot(list(range(1,len(y[i])+1)), y[i], color='lightskyblue') 
+#     for p in range(len(y[i])):
+#         ax.scatter(p+1,y[i][p],s=5*(p+1),c='lightsalmon') 
+#     plt.xticks(list(range(1,len(y[i])+1)),x_lab,fontsize=12)
+#     plt.yticks(size = 12)
+#     plt.xlabel(r'$r$',fontsize=12)
+#     plt.title('std={}'.format(std[i]))
+#     if y[i][0] < 0:
+#         plt.ylabel('BWT(\%)',fontsize=12)
+#         plt.ylim(-6,0)
+#     else:
+#         plt.ylabel('ACC(\%)',fontsize=12) 
+#         # plt.ylim((max(y[i])//10+1)*10-10,(max(y[i])//10+1)*10)
+#         plt.ylim(y_lim[i//2][0],y_lim[i//2][1])
+#     if i % 2 == 0:
+#         plt.figtext(tx[i//2], ty[i//2], title[i//2], fontsize=12)
+
+
+# two y axes
+# t = np.array(x_lab)
+# for i in range(N):
+#     ax1 = fig.add_subplot(3, 2, i+1)
+#     color = 'tab:blue'
+#     ax1.set_xlabel(r'$r$',fontsize=12)
+#     if y[i][0] < 0:
+#         ax1.set_ylabel('BWT(\%)',fontsize=12, color=color)
+#         plt.ylim(-6,0)
+#     else:
+#         ax1.set_ylabel('ACC(\%)',fontsize=12, color=color)
+#         plt.ylim((max(y[i])//10+1)*10-40,(max(y[i])//10+1)*10)
+#     ax1.plot(t, np.array(y[i]), color=color)
+#     ax1.tick_params(axis='y', labelcolor=color)
+#     plt.xticks(list(range(1,len(y[i]))),x_lab,fontsize=12)
+
+#     ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+#     color = 'tab:red'
+#     ax2.set_ylabel('Memory', fontsize=12, color=color)  # we already handled the x-label with ax1
+#     ax2.plot(t, t, color=color)
+#     ax2.tick_params(axis='y', labelcolor=color)
+
+# plt.tight_layout()
+# # plt.subplots_adjust(top=0.85, bottom=0.3)
+# plt.subplots_adjust(bottom=0.12, hspace=1)
+# # fig.legend(bbox_to_anchor=(0.98,1),fontsize=12,ncol=3)
+# plt.savefig('singular.pdf') #,bbox_inches='tight'
+# plt.show()
